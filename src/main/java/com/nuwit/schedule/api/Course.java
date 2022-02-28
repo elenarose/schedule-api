@@ -6,14 +6,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetTime;
 import java.util.List;
 
+/**
+ * Object representing a single course
+ */
 public class Course {
     private final String name;
+    private final String code;
     private final OffsetTime startTime;
     private final OffsetTime endTime;
     private final List<Days> daysOfTheWeek;
 
-    public Course(String name, OffsetTime startTime, OffsetTime endTime, List<Days> daysOfTheWeek) {
+    public Course(String name, String code, OffsetTime startTime, OffsetTime endTime, List<Days> daysOfTheWeek) {
         this.name = name;
+        this.code = code;
         this.startTime = startTime;
         this.endTime = endTime;
         this.daysOfTheWeek = daysOfTheWeek;
@@ -22,6 +27,11 @@ public class Course {
     @JsonProperty
     public String getName() {
         return name;
+    }
+
+    @JsonProperty
+    public String getCode() {
+        return code;
     }
 
     @JsonProperty
