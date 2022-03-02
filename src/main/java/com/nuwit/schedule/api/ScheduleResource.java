@@ -1,13 +1,17 @@
 package com.nuwit.schedule.api;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.time.LocalTime;
 import java.time.OffsetTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -70,51 +74,43 @@ public class ScheduleResource {
         return courses.values();
     }
 
-    public void getCoursesForStudent() {
-        // Method:
-        // Path:
-        // Path params:
-        // Query params:
-        // Body:
-
-        // Response type:
-
-        // Error cases?
+    @GET
+    @Path("courses/student/{studentName}")
+    public List<String> getCoursesForStudent(@PathParam("studentName") String studentName) {
+        return this.schedules.get(studentName);
     }
 
-    public void addStudentToCourse() {
-        // Method:
-        // Path:
-        // Path params:
-        // Query params:
-        // Body:
-
-        // Response type:
-
-        // Error cases?
+    @POST
+    @Path("courses/student/{studentName}")
+    public void addStudentToCourse(@PathParam("studentName") String studentName,
+                                   String courseCode) {
+        List<String> allCourses = new ArrayList<>(this.schedules.get(studentName));
+        allCourses.add(courseCode);
+        this.schedules.put(studentName, allCourses);
     }
 
-    public void getStudentsInCourse() {
-        // Method:
-        // Path:
-        // Path params:
-        // Query params:
-        // Body:
+    @GET
+    @Path("courses/{courseCode}/students")
+    public List<String> getStudentsInCourse(@PathParam("courseCode") String courseCode) {
+        List<String> students = new ArrayList<>();
 
-        // Response type:
+        for (String student : this.schedules.keySet()) {
+            List<String> courses = this.schedules.get(student);
 
-        // Error cases?
+            if (courses.contains(courseCode)) {
+                students.add(student);
+            }
+        }
+
+        return students;
     }
 
-    public void deleteStudentFromCourse() {
-        // Method:
-        // Path:
-        // Path params:
-        // Query params:
-        // Body:
-
-        // Response type:
-
-        // Error cases?
+    @DELETE
+    @Path("courses/{courseCode}/student/{studentName}")
+    public void deleteStudentFromCourse(@PathParam("studentName") String studentName,
+                                        @PathParam("courseCode") String courseCode) {
+        List<String> allCourses = new ArrayList<>(this.schedules.get(studentName));
+        allCourses.remove(courseCode);
+        this.schedules.put(studentName, allCourses);
     }
 }
